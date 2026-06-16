@@ -4,6 +4,10 @@ Custom loading screen for ESX Legacy. Shows the connecting player's characters
 (name, job, money, playtime, last seen, birthday) over a background with optional
 music, plus Team, Patchnotes and Rules panels.
 
+## Requirements
+
+- [oxmysql](https://github.com/overextended/oxmysql)
+
 ## Install
 
 1. Add the folder to your resources and put `ensure l-loadingscreen` in server.cfg.
