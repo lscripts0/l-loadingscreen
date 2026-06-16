@@ -1,12 +1,15 @@
 {
   "serverName": "LSCRIPTS - DEV",
 
+  "comment_header": "enabled: true | false. Shows the server name + Welcome subtitle (top-left).",
+  "header": { "enabled": true },
+
   "comment_locale": "UI language for built-in texts. Allowed: 'en' (default) | 'de'. Files: html/locales/<code>.json.",
   "locale": "en",
 
   "comment_background": "type: 'video' | 'image' (alias 'images'). video = path to an .mp4. images = array of image paths (more than one shows carousel arrows + auto-advance). interval = ms to auto-advance images (0 = off). dim = 0..1 (darken). blur = pixels.",
   "background": {
-    "type": "images",
+    "type": "video",
     "video": "media/bg.mp4",
     "images": ["media/bg.png","media/bg1.png","media/bg2.png","media/bg3.png","media/bg4.png"],
     "interval": 5000,
@@ -34,8 +37,8 @@
   "comment_show": "Toggle individual fields on the character card. Each value: true | false.",
   "show": { "job": true, "money": true, "playtime": true, "lastSeen": true, "birthdate": true },
 
-  "comment_stats": "enabled: true | false. Shows player count and server uptime chips.",
-  "stats": { "enabled": true },
+  "comment_stats": "enabled: true | false (master switch). players: true | false (player count chip). uptime: true | false (uptime chip).",
+  "stats": { "enabled": true, "players": true, "uptime": true },
 
   "comment_team": "enabled: true | false. title = heading. groups = [{ name, members: [{ name, role }] }]. Optional per member: \"image\": \"media/team/x.png\" (shows a picture; omit for none).",
   "team": {
