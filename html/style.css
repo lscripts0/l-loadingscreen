@@ -1,0 +1,33 @@
+/* =========================================================
+   l-loadingscreen Theme / Accent
+   Change the accent color here. No rebuild needed, just
+   restart the resource (restart l-loadingscreen).
+   ========================================================= */
+:root {
+  --accent: #2CB0FD;          /* main accent */
+  --accent-soft: #6cc5fd;     /* titles / softer accents */
+  --accent-rgb: 44, 176, 253; /* same color as R,G,B for glows (rgba) */
+}
+
+/* =========================================================
+   Scrollbar: lscripts HUD standard (thin, white 15% thumb,
+   accent on hover).
+   ========================================================= */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent, #2CB0FD);
+}
