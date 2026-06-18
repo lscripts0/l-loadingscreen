@@ -7,6 +7,8 @@
   --accent: #2CB0FD;          /* main accent */
   --accent-soft: #6cc5fd;     /* titles / softer accents */
   --accent-rgb: 44, 176, 253; /* same color as R,G,B for glows (rgba) */
+
+  --bg-dim: 0.62;             /* darken the background image/video: 0 = off, 1 = black */
 }
 
 /* =========================================================

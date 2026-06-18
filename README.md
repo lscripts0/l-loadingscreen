@@ -33,7 +33,7 @@ the panels has its own files so you can edit them without touching the main conf
 - `html/patchnotes.json` patchnotes releases
 - `html/tips.json` rotating tips
 - `html/locales/en.json` / `de.json` the built-in UI texts
-- `html/style.css` accent colour
+- `html/style.css` accent colour and background dim (`--bg-dim`)
 - `html/media/` drop your `bg.mp4`, background images, music and team images here
 
 ## Background video
