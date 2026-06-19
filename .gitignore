@@ -1,6 +1,0 @@
-web/
-npm-debug.log*
-html/media/*.mp4
-html/media/music/
-.DS_Store
-Thumbs.db
