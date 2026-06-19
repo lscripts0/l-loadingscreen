@@ -3,6 +3,22 @@ local START_TIME = os.time()
 local VERSION_REPO = 'lscripts0/l-loadingscreen'
 local REPO_URL = 'https://github.com/lscripts0/l-loadingscreen'
 
+local charactersEnabled = true
+
+local function loadCharactersEnabled()
+    local raw = LoadResourceFile(GetCurrentResourceName(), 'html/settings.json')
+    if not raw then return true end
+
+    local ok, data = pcall(json.decode, raw)
+    if not ok or type(data) ~= 'table' then return true end
+
+    return not (data.characters and data.characters.enabled == false)
+end
+
+CreateThread(function()
+    charactersEnabled = loadCharactersEnabled()
+end)
+
 local function checkVersion()
     local current = GetResourceMetadata(GetCurrentResourceName(), 'version', 0)
     current = current and current:match('%d+%.%d+%.%d+')
@@ -113,10 +129,12 @@ AddEventHandler('playerConnecting', function(_, _, deferrals)
     Wait(0)
 
     local characters = {}
-    local license = GetPlayerIdentifierByType(src, 'license')
-    if license then
-        local ok, res = pcall(queryCharacters, license)
-        if ok and type(res) == 'table' then characters = res end
+    if charactersEnabled then
+        local license = GetPlayerIdentifierByType(src, 'license')
+        if license then
+            local ok, res = pcall(queryCharacters, license)
+            if ok and type(res) == 'table' then characters = res end
+        end
     end
 
     pcall(function()
