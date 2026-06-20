@@ -3,7 +3,7 @@ game 'gta5'
 
 author 'lscripts'
 description 'Loading screen for ESX Legacy'
-version '1.0.4'
+version '1.1.0'
 lua54 'yes'
 
 loadscreen 'html/index.html'
@@ -14,6 +14,7 @@ client_script 'client/client.lua'
 
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
+    'server/config.lua',
     'server/server.lua',
 }
 

@@ -30,5 +30,15 @@
     "month": "{n} mo ago",
     "year": "{n} y ago"
   },
-  "sex": { "male": "Male", "female": "Female" }
+  "sex": { "male": "Male", "female": "Female" },
+  "queue": {
+    "title": "Before you connect",
+    "intro": "By pressing \"Accept & Connect\" I hereby accept the:",
+    "accept": "Accept & Connect",
+    "deny": "Decline",
+    "denied": "You must accept to connect.",
+    "waiting": "Connecting… preparing your session.",
+    "position": "You are in the queue: position {n} of {total}.",
+    "full": "Server is full. Waiting for a free slot… (position {n} of {total})"
+  }
 }

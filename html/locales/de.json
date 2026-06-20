@@ -30,5 +30,15 @@
     "month": "vor {n} Mon",
     "year": "vor {n} J"
   },
-  "sex": { "male": "Männlich", "female": "Weiblich" }
+  "sex": { "male": "Männlich", "female": "Weiblich" },
+  "queue": {
+    "title": "Bevor du verbindest",
+    "intro": "Mit Klick auf \"Akzeptieren & Verbinden\" akzeptiere ich hiermit die:",
+    "accept": "Akzeptieren & Verbinden",
+    "deny": "Ablehnen",
+    "denied": "Du musst akzeptieren, um zu verbinden.",
+    "waiting": "Verbinde… bereite deine Sitzung vor.",
+    "position": "Du bist in der Warteschlange: Position {n} von {total}.",
+    "full": "Server ist voll. Warte auf einen freien Slot… (Position {n} von {total})"
+  }
 }
