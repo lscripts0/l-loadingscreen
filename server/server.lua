@@ -132,20 +132,20 @@ local function getEndpointIp(src)
     return (tostring(ep):gsub(':%d+$', ''))
 end
 
-local function postWebhook(embed)
-    if not (Config.Webhook and Config.Webhook.enabled) then return end
-    local url = Config.Webhook.url
-    if not url or url == '' then return end
+local function webhookUrl(event)
+    if not (Config.Webhook and Config.Webhook.enabled) then return nil end
+    local url = Config.Webhook.events and Config.Webhook.events[event]
+    if type(url) == 'string' and url ~= '' then return url end
+    return nil
+end
+
+local function postWebhook(url, embed)
+    if not url then return end
 
     PerformHttpRequest(url, function() end, 'POST', json.encode({
         username = Config.Webhook.username,
         embeds = { embed },
     }), { ['Content-Type'] = 'application/json' })
-end
-
-local function webhookEnabled(event)
-    return Config.Webhook and Config.Webhook.enabled
-        and Config.Webhook.events and Config.Webhook.events[event]
 end
 
 local function serverStats()
@@ -393,8 +393,9 @@ local function recordConsent(license, name, ip, version)
         { license, name, ip, version }
     )
 
-    if webhookEnabled('consent') then
-        postWebhook({
+    local url = webhookUrl('consent')
+    if url then
+        postWebhook(url, {
             title = 'ToS accepted',
             color = 3447003,
             description = ('**%s**\n`%s`\nVersion %d'):format(name or 'unknown', license, version),
@@ -452,8 +453,9 @@ local function rateLimited(license, ip)
 end
 
 local function webhookJoin(name, group)
-    if not webhookEnabled('join') then return end
-    postWebhook({
+    local url = webhookUrl('join')
+    if not url then return end
+    postWebhook(url, {
         title = 'Player connected',
         color = 5763719,
         description = ('**%s**%s\nOnline: %d / %d'):format(
@@ -465,8 +467,9 @@ local function webhookJoin(name, group)
 end
 
 local function webhookLeave(name)
-    if not webhookEnabled('leave') then return end
-    postWebhook({
+    local url = webhookUrl('leave')
+    if not url then return end
+    postWebhook(url, {
         title = 'Player disconnected',
         color = 15548997,
         description = ('**%s**\nOnline: %d / %d'):format(
@@ -478,14 +481,15 @@ end
 local lastQueuePost = 0
 
 local function maybeWebhookQueue(queueLen)
-    if not webhookEnabled('full') then return end
+    local url = webhookUrl('full')
+    if not url then return end
 
     local now = os.time()
     local cooldown = (Config.Webhook and Config.Webhook.queueCooldown) or 60
     if now - lastQueuePost < cooldown then return end
     lastQueuePost = now
 
-    postWebhook({
+    postWebhook(url, {
         title = 'Queue active',
         color = 15844367,
         description = ('Waiting: **%d**\nOnline: %d / %d'):format(

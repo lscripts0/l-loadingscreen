@@ -3,7 +3,7 @@ game 'gta5'
 
 author 'lscripts'
 description 'Loading screen for ESX Legacy'
-version '1.2.0'
+version '1.2.1'
 lua54 'yes'
 
 loadscreen 'html/index.html'

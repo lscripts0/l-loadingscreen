@@ -68,19 +68,20 @@ Config.RateLimit = {
     byIp = true,
 }
 
--- Discord webhook for connect monitoring.
+-- Discord webhooks for connect monitoring.
 Config.Webhook = {
     enabled = false,
-    url = "",
     username = "l-loadingscreen",
 
     -- Min seconds between "server full / queue" posts (anti spam).
     queueCooldown = 60,
 
+    -- One webhook URL per event. Empty "" = that event is off. Use the same URL on
+    -- several events to send them all to one channel.
     events = {
-        full = true,     -- server full / a queue is forming
-        join = true,     -- player got through and connected
-        leave = true,    -- player disconnected
-        consent = true,  -- player (re)accepted the ToS
+        full    = "",  -- server full / a queue is forming
+        join    = "",  -- player got through and connected
+        leave   = "",  -- player disconnected
+        consent = "",  -- player (re)accepted the ToS
     },
 }
