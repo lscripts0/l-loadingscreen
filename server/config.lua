@@ -43,9 +43,44 @@ Config.Consent = {
     -- false = skip the card.
     enabled = true,
 
+    -- ToS version. Bump when rules/links change -> everyone must accept again.
+    -- Players who already accepted this version skip the card.
+    version = 1,
+
     -- Legal links as a clickable text line. Empty = hidden.
     links = {
         { label = "Terms of Service", url = "https://example.com/tos" },
         { label = "Privacy Policy",   url = "https://example.com/privacy" },
+    },
+}
+
+-- Connect rate limit (anti spam / reconnect floods).
+Config.RateLimit = {
+    enabled = true,
+
+    -- More than maxAttempts within windowSeconds -> blocked for blockSeconds.
+    maxAttempts = 5,
+    windowSeconds = 30,
+    blockSeconds = 60,
+
+    -- Which keys to count. byIp may affect players sharing one IP (same household).
+    byLicense = true,
+    byIp = true,
+}
+
+-- Discord webhook for connect monitoring.
+Config.Webhook = {
+    enabled = false,
+    url = "",
+    username = "l-loadingscreen",
+
+    -- Min seconds between "server full / queue" posts (anti spam).
+    queueCooldown = 60,
+
+    events = {
+        full = true,     -- server full / a queue is forming
+        join = true,     -- player got through and connected
+        leave = true,    -- player disconnected
+        consent = true,  -- player (re)accepted the ToS
     },
 }

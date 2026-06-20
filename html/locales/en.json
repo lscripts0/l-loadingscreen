@@ -37,6 +37,7 @@
     "accept": "Accept & Connect",
     "deny": "Decline",
     "denied": "You must accept to connect.",
+    "rateLimited": "Too many connection attempts. Please wait {n}s and try again.",
     "waiting": "Connecting… preparing your session.",
     "position": "You are in the queue: position {n} of {total}.",
     "full": "Server is full. Waiting for a free slot… (position {n} of {total})"

@@ -112,6 +112,42 @@ CreateThread(function()
     checkVersion()
 end)
 
+CreateThread(function()
+    MySQL.query.await([[
+        CREATE TABLE IF NOT EXISTS l_loadingscreen_consent (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            identifier  VARCHAR(60) NOT NULL,
+            name        VARCHAR(64),
+            ip          VARCHAR(45),
+            version     INT NOT NULL,
+            accepted_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_identifier (identifier)
+        )
+    ]])
+end)
+
+local function getEndpointIp(src)
+    local ep = GetPlayerEndpoint(src)
+    if not ep then return nil end
+    return (tostring(ep):gsub(':%d+$', ''))
+end
+
+local function postWebhook(embed)
+    if not (Config.Webhook and Config.Webhook.enabled) then return end
+    local url = Config.Webhook.url
+    if not url or url == '' then return end
+
+    PerformHttpRequest(url, function() end, 'POST', json.encode({
+        username = Config.Webhook.username,
+        embeds = { embed },
+    }), { ['Content-Type'] = 'application/json' })
+end
+
+local function webhookEnabled(event)
+    return Config.Webhook and Config.Webhook.enabled
+        and Config.Webhook.events and Config.Webhook.events[event]
+end
+
 local function serverStats()
     return {
         players = #GetPlayers(),
@@ -253,20 +289,20 @@ local function queryGroup(license)
         SELECT `group` AS grp FROM users WHERE identifier LIKE ?
     ]], { 'char%:' .. hex })
 
-    local bestPriority, bestReserved = Config.Queue.defaultPriority, false
+    local bestPriority, bestReserved, bestGroup = Config.Queue.defaultPriority, false, nil
     local found = false
 
     for _, row in ipairs(rows or {}) do
         local p, r = groupInfo(row.grp)
         if not found or p > bestPriority then
-            bestPriority, bestReserved = p, r
+            bestPriority, bestReserved, bestGroup = p, r, row.grp
             found = true
         elseif p == bestPriority and r then
-            bestReserved = true
+            bestReserved, bestGroup = true, row.grp
         end
     end
 
-    return bestPriority, bestReserved
+    return bestPriority, bestReserved, bestGroup
 end
 
 local function buildRulesCard()
@@ -340,12 +376,142 @@ local function handover(deferrals, license)
     end)
 end
 
-AddEventHandler('playerConnecting', function(_, _, deferrals)
+local function consentVersionFor(license)
+    if not license then return nil end
+    local row = MySQL.single.await(
+        'SELECT version FROM l_loadingscreen_consent WHERE identifier = ? ORDER BY id DESC LIMIT 1',
+        { license }
+    )
+    return row and tonumber(row.version) or nil
+end
+
+local function recordConsent(license, name, ip, version)
+    if not license then return end
+
+    MySQL.insert(
+        'INSERT INTO l_loadingscreen_consent (identifier, name, ip, version) VALUES (?, ?, ?, ?)',
+        { license, name, ip, version }
+    )
+
+    if webhookEnabled('consent') then
+        postWebhook({
+            title = 'ToS accepted',
+            color = 3447003,
+            description = ('**%s**\n`%s`\nVersion %d'):format(name or 'unknown', license, version),
+        })
+    end
+end
+
+local function ensureConsent(deferrals, license, name, ip)
+    if not (Config.Consent and Config.Consent.enabled) then return true end
+    if consentVersionFor(license) == Config.Consent.version then return true end
+    if not awaitConsent(deferrals) then return false end
+
+    recordConsent(license, name, ip, Config.Consent.version)
+    return true
+end
+
+local attempts = {}
+
+local function rateLimited(license, ip)
+    if not (Config.RateLimit and Config.RateLimit.enabled) then return false end
+
+    local cfg = Config.RateLimit
+    local now = os.time()
+
+    local keys = {}
+    if cfg.byLicense and license then keys[#keys + 1] = 'lic:' .. license end
+    if cfg.byIp and ip then keys[#keys + 1] = 'ip:' .. ip end
+
+    local blockedFor = 0
+    for _, key in ipairs(keys) do
+        local a = attempts[key]
+        if not a then a = { times = {} } attempts[key] = a end
+        if a.blockedUntil and a.blockedUntil > now then
+            blockedFor = math.max(blockedFor, a.blockedUntil - now)
+        end
+    end
+    if blockedFor > 0 then return blockedFor end
+
+    for _, key in ipairs(keys) do
+        local a = attempts[key]
+        local kept = {}
+        for _, ts in ipairs(a.times) do
+            if now - ts < cfg.windowSeconds then kept[#kept + 1] = ts end
+        end
+        kept[#kept + 1] = now
+        a.times = kept
+
+        if #kept > cfg.maxAttempts then
+            a.blockedUntil = now + cfg.blockSeconds
+            blockedFor = math.max(blockedFor, cfg.blockSeconds)
+        end
+    end
+
+    return blockedFor > 0 and blockedFor or false
+end
+
+local function webhookJoin(name, group)
+    if not webhookEnabled('join') then return end
+    postWebhook({
+        title = 'Player connected',
+        color = 5763719,
+        description = ('**%s**%s\nOnline: %d / %d'):format(
+            name or 'unknown',
+            group and (' (' .. group .. ')') or '',
+            #GetPlayers(), GetConvarInt('sv_maxClients', 48)
+        ),
+    })
+end
+
+local function webhookLeave(name)
+    if not webhookEnabled('leave') then return end
+    postWebhook({
+        title = 'Player disconnected',
+        color = 15548997,
+        description = ('**%s**\nOnline: %d / %d'):format(
+            name or 'unknown', #GetPlayers(), GetConvarInt('sv_maxClients', 48)
+        ),
+    })
+end
+
+local lastQueuePost = 0
+
+local function maybeWebhookQueue(queueLen)
+    if not webhookEnabled('full') then return end
+
+    local now = os.time()
+    local cooldown = (Config.Webhook and Config.Webhook.queueCooldown) or 60
+    if now - lastQueuePost < cooldown then return end
+    lastQueuePost = now
+
+    postWebhook({
+        title = 'Queue active',
+        color = 15844367,
+        description = ('Waiting: **%d**\nOnline: %d / %d'):format(
+            queueLen, #GetPlayers(), GetConvarInt('sv_maxClients', 48)
+        ),
+    })
+end
+
+AddEventHandler('playerConnecting', function(name, _, deferrals)
     local src = source
     deferrals.defer()
     Wait(0)
 
     local license = GetPlayerIdentifierByType(src, 'license')
+    local ip = getEndpointIp(src)
+
+    local blocked = rateLimited(license, ip)
+    if blocked then
+        deferrals.done(t('queue.rateLimited', { n = blocked }))
+        return
+    end
+
+    if not ensureConsent(deferrals, license, name, ip) then
+        deferrals.done(t('queue.denied'))
+        return
+    end
 
     if not (Config.Queue and Config.Queue.enabled) then
         handover(deferrals, license)
@@ -353,17 +519,10 @@ AddEventHandler('playerConnecting', function(_, _, deferrals)
         return
     end
 
-    if Config.Consent and Config.Consent.enabled then
-        if not awaitConsent(deferrals) then
-            deferrals.done(t('queue.denied'))
-            return
-        end
-    end
-
-    local priority, reserved = Config.Queue.defaultPriority, false
+    local priority, reserved, group = Config.Queue.defaultPriority, false, nil
     if license then
-        local ok, p, r = pcall(queryGroup, license)
-        if ok then priority, reserved = p, r end
+        local ok, p, r, g = pcall(queryGroup, license)
+        if ok then priority, reserved, group = p, r, g end
     end
 
     seqCounter = seqCounter + 1
@@ -383,6 +542,8 @@ AddEventHandler('playerConnecting', function(_, _, deferrals)
         local msg = serverFull and t('queue.full', { n = pos, total = total })
             or t('queue.position', { n = pos, total = total })
 
+        maybeWebhookQueue(total)
+
         if not pcall(function() deferrals.update(msg) end) then
             removeFromQueue(entry)
             return
@@ -398,6 +559,8 @@ AddEventHandler('playerConnecting', function(_, _, deferrals)
 
     handover(deferrals, license)
     deferrals.done()
+
+    webhookJoin(name, group)
 end)
 
 local function freeSlot(playerId)
@@ -419,9 +582,10 @@ RegisterNetEvent('l-loadingscreen:playerSpawned', function()
 end)
 
 AddEventHandler('playerDropped', function()
-    freeSlot(source)
-
     local src = source
+    webhookLeave(GetPlayerName(src))
+    freeSlot(src)
+
     for i = #queue, 1, -1 do
         if queue[i].src == src then table.remove(queue, i) end
     end
@@ -430,10 +594,25 @@ end)
 CreateThread(function()
     while true do
         Wait(5000)
-        local grace = (Config.Queue and Config.Queue.joinGraceTime) or 120
         local now = os.time()
+
+        local grace = (Config.Queue and Config.Queue.joinGraceTime) or 120
         for s, since in pairs(joining) do
             if now - since > grace then joining[s] = nil end
+        end
+
+        local window = (Config.RateLimit and Config.RateLimit.windowSeconds) or 30
+        for key, a in pairs(attempts) do
+            if not a.blockedUntil or a.blockedUntil <= now then
+                local stale = true
+                for _, ts in ipairs(a.times) do
+                    if now - ts < window then
+                        stale = false
+                        break
+                    end
+                end
+                if stale then attempts[key] = nil end
+            end
         end
     end
 end)

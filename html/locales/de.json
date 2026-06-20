@@ -37,6 +37,7 @@
     "accept": "Akzeptieren & Verbinden",
     "deny": "Ablehnen",
     "denied": "Du musst akzeptieren, um zu verbinden.",
+    "rateLimited": "Zu viele Verbindungsversuche. Bitte warte {n}s und versuche es erneut.",
     "waiting": "Verbinde… bereite deine Sitzung vor.",
     "position": "Du bist in der Warteschlange: Position {n} von {total}.",
     "full": "Server ist voll. Warte auf einen freien Slot… (Position {n} von {total})"
