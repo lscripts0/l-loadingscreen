@@ -46,3 +46,9 @@ A video is not included. To use one, add your own `bg.mp4` to `html/media/` and 
 
 On start the server checks GitHub and prints to the console whether the resource is up to
 date.
+
+## Support
+
+If you find this resource useful, you can support development on Ko-fi:
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/lscripts)
