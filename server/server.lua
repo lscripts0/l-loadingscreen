@@ -112,20 +112,6 @@ CreateThread(function()
     checkVersion()
 end)
 
-CreateThread(function()
-    MySQL.query.await([[
-        CREATE TABLE IF NOT EXISTS l_loadingscreen_consent (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            identifier  VARCHAR(60) NOT NULL,
-            name        VARCHAR(64),
-            ip          VARCHAR(45),
-            version     INT NOT NULL,
-            accepted_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            INDEX idx_identifier (identifier)
-        )
-    ]])
-end)
-
 local function getEndpointIp(src)
     local ep = GetPlayerEndpoint(src)
     if not ep then return nil end
@@ -378,11 +364,13 @@ end
 
 local function consentVersionFor(license)
     if not license then return nil end
-    local row = MySQL.single.await(
-        'SELECT version FROM l_loadingscreen_consent WHERE identifier = ? ORDER BY id DESC LIMIT 1',
-        { license }
-    )
-    return row and tonumber(row.version) or nil
+    local ok, row = pcall(function()
+        return MySQL.single.await(
+            'SELECT version FROM l_loadingscreen_consent WHERE identifier = ? ORDER BY id DESC LIMIT 1',
+            { license }
+        )
+    end)
+    return ok and row and tonumber(row.version) or nil
 end
 
 local function recordConsent(license, name, ip, version)
