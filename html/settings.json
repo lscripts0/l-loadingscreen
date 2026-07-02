@@ -4,9 +4,6 @@
   "comment_header": "enabled: true | false. Shows the server name + Welcome subtitle (top-left).",
   "header": { "enabled": true },
 
-  "comment_locale": "UI language for built-in texts. Allowed: 'en' (default) | 'de'. Files: html/locales/<code>.json.",
-  "locale": "en",
-
   "comment_background": "type: 'video' | 'image' (alias 'images'). video = path to an .mp4. images = array of image paths (more than one shows carousel arrows + auto-advance). interval = ms to auto-advance images (0 = off). blur = pixels. The darkening (dim) is set in html/style.css via --bg-dim.",
   "background": {
     "type": "video",
