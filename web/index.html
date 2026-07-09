@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loading</title>
+    <style>
+      html { font-size: clamp(11px, 1.48vh, 36px); }
+      html, body, #root { margin: 0; height: 100%; width: 100%; overflow: hidden; }
+      body { background: #05060a; }
+    </style>
+    <script>
+      (function () {
+        var l = document.createElement('link')
+        l.rel = 'stylesheet'
+        l.href = 'style.css'
+        document.head.appendChild(l)
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
