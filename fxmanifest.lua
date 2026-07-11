@@ -26,6 +26,7 @@ server_scripts {
 
 files {
     'html/index.html',
+    'html/assets/*',
     'html/style.css',
     'html/settings.json',
     'html/patchnotes.json',

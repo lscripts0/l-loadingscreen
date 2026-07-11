@@ -1,0 +1,155 @@
+{
+  "serverName": "LSCRIPTS - DEV",
+
+  "comment_header": "enabled: true | false. Shows the server name + Welcome subtitle (top-left).",
+  "header": { "enabled": true },
+
+  "comment_background": "type: 'video' | 'image' (alias 'images'). video = path to an .mp4. images = array of image paths (more than one shows carousel arrows + auto-advance). interval = ms to auto-advance images (0 = off). blur = pixels. The darkening (dim) is set in html/style.css via --bg-dim.",
+  "background": {
+    "type": "video",
+    "video": "media/bg.mp4",
+    "images": ["media/bg.png","media/bg1.png","media/bg2.png","media/bg3.png","media/bg4.png"],
+    "interval": 5000,
+    "blur": 3
+  },
+
+  "comment_audio": "source: 'video' (use the bg video sound) | 'playlist' (play tracks) | 'none' (silent). volume = 0..1. loop / shuffle = true | false. controls = true | false (false hides the player UI). tracks = list of { src, title, artist } or a plain 'path' string.",
+  "audio": {
+    "source": "playlist",
+    "volume": 0.4,
+    "loop": true,
+    "shuffle": true,
+    "controls": true,
+    "tracks": [
+      { "src": "media/music/ncs_cartoon_jeja_why_we_lose.mp3", "title": "Why We Lose", "artist": "Cartoon & Jéja" },
+      { "src": "media/music/ncs_deaf_kev_invincible_glitch_hop.mp3", "title": "Invincible", "artist": "DEAF KEV" },
+      { "src": "media/music/ncs_elektronomia_sky_high.mp3", "title": "Sky High", "artist": "Elektronomia" }
+    ]
+  },
+
+  "comment_characters": "enabled: true | false. Shows a row of character slot buttons (1, 2, ...); click one to reveal that character's card.",
+  "characters": { "enabled": true },
+
+  "comment_show": "Toggle individual fields on the character card. Each value: true | false.",
+  "show": { "job": true, "money": true, "playtime": true, "lastSeen": true, "birthdate": true },
+
+  "comment_stats": "enabled: true | false (master switch). players: true | false (player count chip). uptime: true | false (uptime chip).",
+  "stats": { "enabled": true, "players": true, "uptime": true },
+
+  "comment_team": "enabled: true | false. title = heading. groups = [{ name, members: [{ name, role }] }]. Optional per member: \"image\": \"media/team/x.png\" (shows a picture; omit for none).",
+  "team": {
+    "enabled": true,
+    "title": "Our Team",
+    "groups": [
+      {
+        "name": "Management",
+        "members": [
+          { "name": "Nico", "role": "Owner" },
+          { "name": "Sarah", "role": "Co-Owner" }
+        ]
+      },
+      {
+        "name": "Development",
+        "members": [
+          { "name": "Max Muster", "role": "Lead Developer" },
+          { "name": "Jonas", "role": "Developer" },
+          { "name": "Mara", "role": "Developer" }
+        ]
+      },
+      {
+        "name": "Administration",
+        "members": [
+          { "name": "Tom", "role": "Head Admin" },
+          { "name": "Kevin", "role": "Admin" },
+          { "name": "Anna", "role": "Admin" }
+        ]
+      },
+      {
+        "name": "Support",
+        "members": [
+          { "name": "Lisa", "role": "Head Supporter" },
+          { "name": "Paul", "role": "Supporter" },
+          { "name": "Mia", "role": "Supporter" },
+          { "name": "Ben", "role": "Supporter" }
+        ]
+      },
+      {
+        "name": "Content",
+        "members": [
+          { "name": "Leon", "role": "Mapper" },
+          { "name": "Emma", "role": "Designer" }
+        ]
+      }
+    ]
+  },
+
+  "comment_patchnotes": "enabled: true | false. The content lives in html/patchnotes.json.",
+  "patchnotes": { "enabled": true },
+
+  "comment_rules": "enabled: true | false. title = heading. groups = [{ name, items: ['...'] }]. Rules are numbered continuously across groups.",
+  "rules": {
+    "enabled": true,
+    "title": "Server Rules",
+    "groups": [
+      {
+        "name": "General",
+        "items": [
+          "Be respectful to all players.",
+          "Follow the instructions of the team.",
+          "Do not abuse bugs, report them instead.",
+          "No insults, racism or discrimination.",
+          "Advertising other servers is forbidden.",
+          "Account sharing is not allowed."
+        ]
+      },
+      {
+        "name": "Roleplay",
+        "items": [
+          "Always stay in character (IC).",
+          "No RDM / VDM / powergaming.",
+          "No fail-RP or metagaming.",
+          "Always keep your roleplay realistic.",
+          "No combat logging during active situations.",
+          "Respect the new-life rule after death."
+        ]
+      },
+      {
+        "name": "Factions",
+        "items": [
+          "Respect faction whitelists and hierarchy.",
+          "No cop-baiting without an RP reason.",
+          "Hostage situations: max. 2 hostages with proper RP.",
+          "Radio must not be used for metagaming."
+        ]
+      },
+      {
+        "name": "Technical",
+        "items": [
+          "No cheats, mods or exploits.",
+          "On FPS drops, clear your cache first.",
+          "Report problems via a support ticket."
+        ]
+      }
+    ]
+  },
+
+  "comment_motd": "enabled: true | false. title + text are shown as the 'Message of the Day'.",
+  "motd": {
+    "enabled": true,
+    "title": "Message of the Day",
+    "text": "Welcome to the server! Please follow the rules and have a great time. Enjoy your roleplay!"
+  },
+
+  "comment_tips": "enabled: true | false. interval = ms between rotating tips. The content lives in html/tips.json.",
+  "tips": { "enabled": true, "interval": 6000 },
+
+  "comment_social": "enabled: true | false. links = [{ label, icon, url }]. icon: 'discord' | 'shop' | 'web'.",
+  "social": {
+    "enabled": true,
+    "links": [
+      { "label": "Discord", "icon": "discord", "url": "https://discord.gg/yourserver" },
+      { "label": "Shop", "icon": "shop", "url": "https://shop.yourserver.com" },
+      { "label": "Website", "icon": "web", "url": "https://yourserver.com" }
+    ]
+  }
+}

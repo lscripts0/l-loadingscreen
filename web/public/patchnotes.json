@@ -1,0 +1,71 @@
+{
+  "title": "Patchnotes",
+
+  "comment_colors": "Color per entry type (CSS color: hex, rgb(), or var(--accent)). Used for the badge + the row's left border.",
+  "colors": {
+    "added": "rgb(175,255,72)",
+    "changed": "var(--accent)",
+    "fixed": "var(--accent-soft)",
+    "removed": "rgb(255,70,70)"
+  },
+
+  "releases": [
+    {
+      "version": "v1.2.0",
+      "date": "16.06.2026",
+      "time": "14:30",
+      "entries": [
+        { "type": "added", "text": "New loading screen with character info, team panel and patchnotes." },
+        { "type": "added", "text": "Music player with controls and multiple background images." },
+        { "type": "added", "text": "Server stats (player count and uptime) on the loading screen." },
+        { "type": "changed", "text": "Completely new design in the server style." },
+        { "type": "changed", "text": "Navigation buttons turned into compact icon buttons." },
+        { "type": "fixed", "text": "Various minor bugs fixed." }
+      ]
+    },
+    {
+      "version": "v1.1.0",
+      "date": "10.06.2026",
+      "time": "18:00",
+      "entries": [
+        { "type": "added", "text": "Added a drug system with labs." },
+        { "type": "added", "text": "New processing and storage mechanics for drugs." },
+        { "type": "changed", "text": "Economy adjusted and rebalanced." },
+        { "type": "fixed", "text": "Improved performance while loading the map." },
+        { "type": "removed", "text": "Removed the old tutorial area." }
+      ]
+    },
+    {
+      "version": "v1.0.5",
+      "date": "02.06.2026",
+      "time": "20:15",
+      "entries": [
+        { "type": "added", "text": "New clothing and prop selection in the quick menu." },
+        { "type": "changed", "text": "Inventory UI redesigned in the HUD style." },
+        { "type": "fixed", "text": "Fixed an error when saving outfits." }
+      ]
+    },
+    {
+      "version": "v1.0.0",
+      "date": "25.05.2026",
+      "time": "12:00",
+      "entries": [
+        { "type": "added", "text": "Server release with ESX Legacy and the ox stack." },
+        { "type": "added", "text": "Server-wide time and weather synchronization." },
+        { "type": "added", "text": "Multicharacter with three character slots." },
+        { "type": "added", "text": "Custom chat in the HUD look." },
+        { "type": "changed", "text": "Reworked the default spawn points." }
+      ]
+    },
+    {
+      "version": "v0.9.0 (Beta)",
+      "date": "18.05.2026",
+      "time": "16:45",
+      "entries": [
+        { "type": "added", "text": "Closed beta started." },
+        { "type": "fixed", "text": "Fixed numerous stability issues." },
+        { "type": "removed", "text": "Removed outdated test resources." }
+      ]
+    }
+  ]
+}
