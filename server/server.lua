@@ -281,27 +281,43 @@ local function rateLimited(license, ip)
     return blockedFor > 0 and blockedFor or false
 end
 
-local function webhookJoin(name)
+local function playerIdentifiers(src)
+    local out = {}
+    for _, id in ipairs(GetPlayerIdentifiers(src) or {}) do
+        if not id:find('^ip:') then
+            out[#out + 1] = '`' .. id .. '`'
+        end
+    end
+    return table.concat(out, '\n')
+end
+
+local function webhookJoin(name, src)
     local url = webhookUrl('join')
     if not url then return end
+    local ids = playerIdentifiers(src)
     postWebhook(url, {
         title = 'Player connected',
         color = 5763719,
-        description = ('**%s**\nOnline: %d / %d'):format(
+        description = ('**%s** joined the server\nOnline: %d / %d'):format(
             name or 'unknown', #GetPlayers(), GetConvarInt('sv_maxClients', 48)
         ),
+        fields = ids ~= '' and { { name = 'Identifiers', value = ids } } or nil,
+        footer = { text = os.date('%d.%m.%Y %H:%M:%S') },
     })
 end
 
-local function webhookLeave(name)
+local function webhookLeave(name, src, reason)
     local url = webhookUrl('leave')
     if not url then return end
+    local ids = playerIdentifiers(src)
     postWebhook(url, {
         title = 'Player disconnected',
         color = 15548997,
-        description = ('**%s**\nOnline: %d / %d'):format(
-            name or 'unknown', #GetPlayers(), GetConvarInt('sv_maxClients', 48)
+        description = ('**%s** left the server, reason: %s\nOnline: %d / %d'):format(
+            name or 'unknown', reason or 'unknown', #GetPlayers(), GetConvarInt('sv_maxClients', 48)
         ),
+        fields = ids ~= '' and { { name = 'Identifiers', value = ids } } or nil,
+        footer = { text = os.date('%d.%m.%Y %H:%M:%S') },
     })
 end
 
@@ -322,11 +338,11 @@ AddEventHandler('playerConnecting', function(name, _, deferrals)
     handover(deferrals, src, license)
     deferrals.done()
 
-    webhookJoin(name)
+    webhookJoin(name, src)
 end)
 
-AddEventHandler('playerDropped', function()
-    webhookLeave(GetPlayerName(source))
+AddEventHandler('playerDropped', function(reason)
+    webhookLeave(GetPlayerName(source), source, reason)
 end)
 
 CreateThread(function()

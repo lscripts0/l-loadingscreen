@@ -3,7 +3,7 @@ game 'gta5'
 
 author 'lscripts'
 description 'Loading screen for ESX and QBCore'
-version '1.4.0'
+version '1.5.0'
 lua54 'yes'
 
 loadscreen 'html/index.html'
