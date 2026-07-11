@@ -1,4 +1,4 @@
-# l-loadingscreen
+# l-fivem-loadingscreen
 
 Custom loading screen for **ESX Legacy and QBCore**. While the game loads it shows the
 connecting player's own characters (name, job, money, playtime, last seen, birthday) over a
@@ -17,7 +17,7 @@ Everything is configured in plain JSON, no build step. English and German are in
 
 ## Install
 
-1. Add the folder to your resources and put `ensure l-loadingscreen` in your server.cfg.
+1. Add the folder to your resources and put `ensure l-fivem-loadingscreen` in your server.cfg.
 2. Remove or stop any other loading screen (usually `esx_loadingscreen` on ESX or
    `qb-loading` on QBCore), you can only run one at a time.
 3. Configure everything in `html/settings.json` (server name, background, audio, panels).

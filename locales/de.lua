@@ -47,4 +47,8 @@ Locales['de'] = {
     connect = {
         rateLimited = 'Zu viele Verbindungsversuche. Bitte warte {n}s und versuche es erneut.',
     },
+    version = {
+        current = 'l-fivem-loadingscreen {current} ist aktuell',
+        outdated = 'l-fivem-loadingscreen {current} ist veraltet, neueste Version ist {latest}: {url}',
+    },
 }

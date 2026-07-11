@@ -1,7 +1,7 @@
 local START_TIME = os.time()
 
-local VERSION_REPO = 'lscripts0/l-loadingscreen'
-local REPO_URL = 'https://github.com/lscripts0/l-loadingscreen'
+local VERSION_REPO = 'lscripts0/l-fivem-loadingscreen'
+local REPO_URL = 'https://github.com/lscripts0/l-fivem-loadingscreen'
 
 local charactersEnabled = true
 
@@ -47,12 +47,11 @@ local function checkVersion()
         end
 
         if behind then
-            print(('^3Update available. Current: v%s, latest: v%s^0'):format(current, latest))
-            print(('^3%s^0'):format(REPO_URL))
+            print(('^3%s^7'):format(_U('version.outdated', { current = current, latest = latest, url = REPO_URL .. '/releases/latest' })))
         else
-            print(('^2Up to date (v%s)^0'):format(current))
+            print(('^2%s^7'):format(_U('version.current', { current = current })))
         end
-    end, 'GET', '', { ['User-Agent'] = 'l-loadingscreen' })
+    end, 'GET', '', { ['User-Agent'] = 'l-fivem-loadingscreen' })
 end
 
 CreateThread(function()

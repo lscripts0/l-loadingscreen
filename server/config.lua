@@ -26,7 +26,7 @@ Config.RateLimit = {
 -- Discord webhooks for connect monitoring.
 Config.Webhook = {
     enabled = false,
-    username = "l-loadingscreen",
+    username = "l-fivem-loadingscreen",
 
     -- One webhook URL per event. Empty "" = that event is off. Use the same URL on
     -- both events to send them to one channel.
