@@ -285,10 +285,11 @@ local function playerIdentifiers(src)
     local out = {}
     for _, id in ipairs(GetPlayerIdentifiers(src) or {}) do
         if not id:find('^ip:') then
-            out[#out + 1] = '`' .. id .. '`'
+            out[#out + 1] = id
         end
     end
-    return table.concat(out, '\n')
+    if #out == 0 then return nil end
+    return '```\n' .. table.concat(out, '\n') .. '```'
 end
 
 local function webhookJoin(name, src)
@@ -298,10 +299,8 @@ local function webhookJoin(name, src)
     postWebhook(url, {
         title = 'Player connected',
         color = 5763719,
-        description = ('**%s** joined the server\nOnline: %d / %d'):format(
-            name or 'unknown', #GetPlayers(), GetConvarInt('sv_maxClients', 48)
-        ),
-        fields = ids ~= '' and { { name = 'Identifiers', value = ids } } or nil,
+        description = ('**%s** joined the server'):format(name or 'unknown'),
+        fields = ids and { { name = 'Identifiers', value = ids } } or nil,
         footer = { text = os.date('%d.%m.%Y %H:%M:%S') },
     })
 end
@@ -313,10 +312,8 @@ local function webhookLeave(name, src, reason)
     postWebhook(url, {
         title = 'Player disconnected',
         color = 15548997,
-        description = ('**%s** left the server, reason: %s\nOnline: %d / %d'):format(
-            name or 'unknown', reason or 'unknown', #GetPlayers(), GetConvarInt('sv_maxClients', 48)
-        ),
-        fields = ids ~= '' and { { name = 'Identifiers', value = ids } } or nil,
+        description = ('**%s** left the server, reason: %s'):format(name or 'unknown', reason or 'unknown'),
+        fields = ids and { { name = 'Identifiers', value = ids } } or nil,
         footer = { text = os.date('%d.%m.%Y %H:%M:%S') },
     })
 end
