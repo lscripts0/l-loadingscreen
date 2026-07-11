@@ -17,7 +17,10 @@ Everything is configured in plain JSON, no build step. English and German are in
 
 ## Install
 
-1. Add the folder to your resources and put `ensure l-fivem-loadingscreen` in your server.cfg.
+1. Download `l-fivem-loadingscreen.zip` from the
+   [latest release](https://github.com/lscripts0/l-fivem-loadingscreen/releases/latest)
+   (contains the ready-built resource), put the folder into your resources and add
+   `ensure l-fivem-loadingscreen` to your server.cfg.
 2. Remove or stop any other loading screen (usually `esx_loadingscreen` on ESX or
    `qb-loading` on QBCore), you can only run one at a time.
 3. Configure everything in `html/settings.json` (server name, background, audio, panels).

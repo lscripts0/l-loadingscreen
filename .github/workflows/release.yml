@@ -1,0 +1,39 @@
+name: Release asset
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  standalone-zip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm ci
+        working-directory: web
+
+      - run: npm run build
+        working-directory: web
+
+      - name: Bundle
+        run: |
+          mkdir -p temp/l-fivem-loadingscreen
+          cp README.md fxmanifest.lua temp/l-fivem-loadingscreen/
+          cp -r client server shared locales html temp/l-fivem-loadingscreen/
+          cd temp && zip -r ../l-fivem-loadingscreen.zip l-fivem-loadingscreen
+
+      - name: Upload
+        run: gh release upload "$TAG" l-fivem-loadingscreen.zip --clobber
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
